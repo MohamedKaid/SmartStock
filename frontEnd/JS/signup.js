@@ -167,7 +167,7 @@ form?.addEventListener("submit", async (e) => {
     // Success message + redirect
     formSuccess.textContent = "Account created! Redirecting…";
     show(formSuccess);
-    window.location.href = "/frontEnd/index.html"; // TODO: change to your route
+    window.location.href = "./index.html"; // TODO: change to your route
   } catch (err) {
     formError.textContent = mapAuthError(err.code);
     show(formError);
@@ -188,7 +188,7 @@ googleBtn?.addEventListener("click", async () => {
     setLoading(true);
     const { user } = await signInWithPopup(auth, provider);
     await ensureUserDoc(user);   // create user doc if missing
-    window.location.href = "/frontEnd/index.html"; // TODO: change to your route
+    window.location.href = "./index.html"; // TODO: change to your route
   } catch (err) {
     formError.textContent = mapAuthError(err.code);
     show(formError);

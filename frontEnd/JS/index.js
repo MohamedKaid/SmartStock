@@ -87,7 +87,7 @@ menuBtn?.addEventListener("click", () => {
 function wireSignOut() {
   const go = async () => {
     await signOut(auth);
-    window.location.href = "/frontEnd/login.html";
+    window.location.href = "./login.html";
   };
   signoutBtn?.addEventListener("click", go);
   signoutBtnM?.addEventListener("click", go);
@@ -100,7 +100,7 @@ function wireSignOut() {
 // ============================
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "/login.html";
+    window.location.href = "./login.html";
     return;
   }
 

@@ -141,7 +141,7 @@ form?.addEventListener("submit", async (e) => {
     show(formSuccess);
 
     // TODO: Update to your dashboard route
-    window.location.href = "/frontEnd/index.html";
+    window.location.href = "./index.html";
   } catch (err) {
     formError.textContent = mapAuthError(err.code);
     show(formError);
@@ -161,7 +161,7 @@ googleBtn?.addEventListener("click", async () => {
     setLoading(true);
     await signInWithPopup(auth, provider);
     // TODO: Update to your dashboard route
-    window.location.href = "/frontEnd/index.html";
+    window.location.href = "./index.html";
   } catch (err) {
     formError.textContent = mapAuthError(err.code);
     show(formError);
@@ -199,7 +199,7 @@ forgotLink?.addEventListener("click", async (e) => {
 signupLink?.addEventListener("click", (e) => {
   e.preventDefault();
   // TODO: change to your actual signup path
-  window.location.href = "/frontEnd/signup.html";
+  window.location.href = "./signup.html";
 });
 
 // ============================
