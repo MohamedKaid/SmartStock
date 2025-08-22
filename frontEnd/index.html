@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <!-- =========================
+         META & PAGE BASICS
+    ========================== -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SmartStock — Dashboard</title>
+    <meta name="description" content="SmartStock dashboard: stock KPIs, alerts, and recent activity." />
+
+    <!-- =========================
+         APP SCRIPT (MODULE)
+    ========================== -->
+    <script type="module" src="/frontEnd/JS/index.js"></script>
+
+    <!-- =========================
+         FONTS & TAILWIND (CDN)
+    ========================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Tailwind theme tweaks (brand colors, glow)
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+            colors: {
+              brand: {
+                50:"#ecfdf5",100:"#d1fae5",200:"#a7f3d0",300:"#6ee7b7",
+                400:"#34d399",500:"#10b981",600:"#059669",700:"#047857",800:"#065f46",900:"#064e3b"
+              },
+            },
+            boxShadow: { glow: "0 10px 30px -5px rgb(16 185 129 / 0.35)" },
+          },
+        },
+        darkMode: "class",
+        plugins: [
+            ({ addBase, theme }) => addBase({
+                'html': { color: theme('colors.white') },
+                'body': { color: theme('colors.white') },
+            })
+        ]
+      };
+    </script>
+  </head>
+
+  <!-- =========================
+       BODY & BACKGROUND
+  ========================== -->
+  <body class="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+    <!-- Soft gradient backdrop -->
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden">
+      <div class="absolute -top-1/2 left-1/2 -translate-x-1/2 w-[110vw] h-[110vw] rounded-full bg-gradient-to-br from-brand-300/30 via-brand-500/10 to-emerald-500/10 blur-xl sm:blur-3xl"></div>
+    </div>
+
+    <!-- =========================
+         APP SHELL (NAV + CONTENT)
+    ========================== -->
+    <div class="relative z-10">
+
+      <!-- ===== Top Nav ===== -->
+      <header class="sticky top-0 z-20 backdrop-blur-xl bg-white/80 dark:bg-slate-900/60 border-b border-white/50 dark:border-white/10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <!-- Brand / Menu -->
+          <div class="flex items-center gap-3">
+            <!-- Mobile menu button -->
+            <button id="menu-btn" class="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-brand-500">
+              <span class="sr-only">Open menu</span>
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+
+            <!-- Logo / Title -->
+            <a href="./index.html" class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-emerald-600 text-white shadow-glow">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                  <path d="M3.3 7.3 12 12l8.7-4.7"/><path d="M7 12v7"/><path d="M17 12v7"/>
+                </svg>
+              </span>
+              <span>SmartStock</span>
+            </a>
+          </div>
+
+          <!-- Search (desktop) -->
+          <div class="hidden md:flex md:items-center md:w-[420px]">
+            <div class="relative w-full">
+              <input id="search-input" type="search" placeholder="Search items, SKUs or barcodes…"
+                     class="w-full rounded-xl bg-slate-100/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 px-4 py-2.5 pl-10 text-sm outline-none focus:ring-2 focus:ring-brand-500/40" />
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- User menu -->
+          <div class="flex items-center gap-3">
+            <span id="user-name" class="hidden sm:inline text-sm text-slate-700 dark:text-slate-300">—</span>
+            <button id="signout-btn" class="hidden sm:inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-brand-500">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign out
+            </button>
+            <div id="avatar" class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-emerald-600 text-white font-semibold">U</div>
+          </div>
+        </div>
+
+        <!-- Mobile search -->
+        <div class="md:hidden px-4 pb-3">
+          <div class="relative">
+            <input id="m-search-input" type="search" placeholder="Search items, SKUs or barcodes…"
+                   class="w-full rounded-xl bg-slate-100/80 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 px-4 py-2.5 pl-10 text-sm outline-none focus:ring-2 focus:ring-brand-500/40" />
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== Layout: Sidebar + Main ===== -->
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex gap-6">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="hidden md:block w-60 shrink-0">
+          <nav class="space-y-1">
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 bg-slate-900/90 text-white shadow-glow" href="./dashboard.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3z"/><path d="M13 21h8V8h-8z"/><path d="M3 21h8v-6H3z"/></svg>
+              Dashboard
+            </a>
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800" href="./items.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Items
+            </a>
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800" href="./transactions.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+              Transactions
+            </a>
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800" href="./locations.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>
+              Locations
+            </a>
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800" href="./suppliers.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21v-7h8v7"/><path d="M12 3l8 6H4z"/></svg>
+              Suppliers
+            </a>
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800" href="./alerts.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Alerts
+            </a>
+            <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800" href="./settings.html">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.2l.06.06c.48.48 1.15.68 1.82.52h.08A1.65 1.65 0 0 0 11 2.29V2a2 2 0 1 1 4 0v.09c0 .68.26 1.33.73 1.8.47.47 1.12.73 1.8.73H18a2 2 0 1 1 0 4h-.09c-.68 0-1.33.26-1.8.73a1.65 1.65 0 0 0-.52 1.82v.08c.16.67-.04 1.34-.52 1.82z"/></svg>
+              Settings
+            </a>
+          </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1">
+
+          <!-- ===== Quick Actions ===== -->
+          <section aria-labelledby="quick-actions-title" class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <h2 id="quick-actions-title" class="text-lg font-semibold text-slate-900 dark:text-white">Quick actions</h2>
+              <div class="md:hidden">
+                <button id="signout-btn-m" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-brand-500">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Sign out
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <a href="./items-new.html" class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-3 hover:shadow-lg hover:border-brand-300 transition">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-brand-100 text-brand-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                  </span>
+                  <span class="text-sm font-medium">Add Item</span>
+                </div>
+              </a>
+              <a href="./receive.html" class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-3 hover:shadow-lg hover:border-brand-300 transition">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 17l4 4 4-4"/><path d="M12 12v9"/><path d="M20.88 18.09A10 10 0 1 0 21 12"/></svg>
+                  </span>
+                  <span class="text-sm font-medium">Receive Stock</span>
+                </div>
+              </a>
+              <a href="./issue.html" class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-3 hover:shadow-lg hover:border-brand-300 transition">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-rose-100 text-rose-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 7l-4-4-4 4"/><path d="M12 2v9"/><path d="M3 12a9 9 0 1 0 9-9"/></svg>
+                  </span>
+                  <span class="text-sm font-medium">Issue/Ship</span>
+                </div>
+              </a>
+              <a href="./transfer.html" class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-3 hover:shadow-lg hover:border-brand-300 transition">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/></svg>
+                  </span>
+                  <span class="text-sm font-medium">Transfer</span>
+                </div>
+              </a>
+              <a href="./scan.html" class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-3 hover:shadow-lg hover:border-brand-300 transition">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 7 3 3 7 3"/><polyline points="17 3 21 3 21 7"/><polyline points="21 17 21 21 17 21"/><polyline points="7 21 3 21 3 17"/></svg>
+                  </span>
+                  <span class="text-sm font-medium">Scan</span>
+                </div>
+              </a>
+              <a href="./alerts.html" class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-3 hover:shadow-lg hover:border-brand-300 transition">
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                  </span>
+                  <span class="text-sm font-medium">Alerts</span>
+                </div>
+              </a>
+            </div>
+          </section>
+
+          <!-- ===== KPI Cards ===== -->
+          <section aria-labelledby="kpi-title" class="mb-6">
+            <h2 id="kpi-title" class="sr-only">Key metrics</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <!-- Stock on Hand -->
+              <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-4">
+                <p class="text-xs text-slate-500">Stock on hand</p>
+                <p id="kpi-soh" class="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">—</p>
+              </div>
+              <!-- Inventory Value -->
+              <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-4">
+                <p class="text-xs text-slate-500">Inventory value</p>
+                <p id="kpi-value" class="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">—</p>
+              </div>
+              <!-- Low-stock items -->
+              <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-4">
+                <p class="text-xs text-slate-500">Low-stock items</p>
+                <p id="kpi-low" class="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">—</p>
+              </div>
+              <!-- Transactions today -->
+              <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60 p-4">
+                <p class="text-xs text-slate-500">Transactions today</p>
+                <p id="kpi-txns" class="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">—</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===== Columns: Alerts + Recent Activity ===== -->
+          <section class="grid lg:grid-cols-2 gap-6">
+            <!-- Low-Stock Alerts -->
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60">
+              <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Low-stock alerts</h3>
+                <a href="./alerts.html" class="text-xs font-medium text-brand-700 hover:text-brand-800">View all</a>
+              </div>
+              <div id="alerts-list" class="divide-y divide-slate-200 dark:divide-slate-800">
+                <!-- Filled by JS -->
+                <div class="p-4 text-sm text-slate-500">Loading…</div>
+              </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/60">
+              <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Recent transactions</h3>
+                <a href="./transactions.html" class="text-xs font-medium text-brand-700 hover:text-brand-800">View all</a>
+              </div>
+              <div id="txn-list" class="divide-y divide-slate-200 dark:divide-slate-800">
+                <!-- Filled by JS -->
+                <div class="p-4 text-sm text-slate-500">Loading…</div>
+              </div>
+            </div>
+          </section>
+
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

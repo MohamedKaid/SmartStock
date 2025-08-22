@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- =========================
+         META & PAGE BASICS
+    ========================== -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SmartStock — Create your account</title>
+    <meta name="description" content="Create your SmartStock account to start tracking inventory." />
+
+    <!-- =========================
+         FONTS
+    ========================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- =========================
+         TAILWIND (CDN) + THEME
+    ========================== -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+            colors: {
+              brand: {
+                50:"#ecfdf5",100:"#d1fae5",200:"#a7f3d0",300:"#6ee7b7",
+                400:"#34d399",500:"#10b981",600:"#059669",700:"#047857",800:"#065f46",900:"#064e3b"
+              },
+            },
+            boxShadow: { glow: "0 10px 30px -5px rgb(16 185 129 / 0.35)" },
+          },
+        },
+        darkMode: "media",
+      };
+    </script>
+  </head>
+
+  <!-- =========================
+       BODY & BACKGROUND
+  ========================== -->
+  <body class="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+    <!-- Soft gradient + subtle grid -->
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden">
+      <div class="absolute -top-1/2 left-1/2 -translate-x-1/2 w-[110vw] h-[110vw] rounded-full bg-gradient-to-br from-brand-300/40 via-brand-500/20 to-emerald-500/10 blur-xl sm:blur-3xl"></div>
+      <svg class="absolute inset-0 opacity-0 sm:opacity-[0.06] w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="currentColor" stroke-width="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+    </div>
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================== -->
+    <main class="relative z-10 flex items-center justify-center p-6 sm:p-10">
+      <div class="w-full max-w-md">
+        <!-- =========================
+             AUTH CARD (glassmorphism)
+        ========================== -->
+        <div class="rounded-3xl border border-white/40 bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl shadow-2xl ring-1 ring-slate-200/60 dark:ring-white/10">
+          <!-- ===== Header / Branding ===== -->
+          <div class="p-8 pb-4 text-center">
+            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-emerald-500 text-white shadow-glow">
+              <!-- cube/box icon -->
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                <path d="M3.3 7.3 12 12l8.7-4.7"/><path d="M7 12v7"/><path d="M17 12v7"/>
+              </svg>
+            </div>
+
+            <!-- Title & subhead -->
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Create your <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-emerald-500">SmartStock</span> account
+            </h1>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Set up in seconds. Track forever.</p>
+          </div>
+
+          <!-- ===== Sign Up Form ===== -->
+          <form id="signup-form" class="p-8 pt-6" novalidate>
+            <div class="space-y-5">
+              <!-- Full name -->
+              <div>
+                <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Full name</label>
+                <input id="name" name="name" type="text" autocomplete="name" required
+                  class="mt-2 w-full rounded-xl border border-slate-300/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800/70 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 transition"
+                  placeholder="Alex Johnson" />
+                <p id="name-error" class="mt-1 hidden text-xs text-rose-600">Please enter your name.</p>
+              </div>
+
+              <!-- Email -->
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required
+                  class="mt-2 w-full rounded-xl border border-slate-300/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800/70 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 transition"
+                  placeholder="you@example.com" />
+                <p id="email-error" class="mt-1 hidden text-xs text-rose-600">Enter a valid email.</p>
+              </div>
+
+              <!-- Password -->
+              <div>
+                <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Password</label>
+                <input id="password" name="password" type="password" minlength="6" autocomplete="new-password" required
+                  class="mt-2 w-full rounded-xl border border-slate-300/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800/70 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 transition"
+                  placeholder="At least 6 characters" />
+                <p id="password-error" class="mt-1 hidden text-xs text-rose-600">Password must be at least 6 characters.</p>
+              </div>
+
+              <!-- Confirm Password -->
+              <div>
+                <label for="confirm" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Confirm password</label>
+                <input id="confirm" name="confirm" type="password" minlength="6" autocomplete="new-password" required
+                  class="mt-2 w-full rounded-xl border border-slate-300/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800/70 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 shadow-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 transition"
+                  placeholder="Re-type your password" />
+                <p id="confirm-error" class="mt-1 hidden text-xs text-rose-600">Passwords don’t match.</p>
+              </div>
+
+              <!-- Submit -->
+              <button id="submit-btn" type="submit"
+                class="group mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-glow transition hover:from-brand-500 hover:to-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 disabled:opacity-50">
+                <!-- user-plus icon -->
+                <svg class="h-5 w-5 opacity-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <circle cx="9" cy="7" r="4"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/>
+                  <path d="M19 8v6"/><path d="M22 11h-6"/>
+                </svg>
+                Create account
+              </button>
+
+              <!-- Divider -->
+              <div class="relative my-2">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200 dark:border-slate-700"></div></div>
+                <div class="relative flex justify-center">
+                  <span class="bg-white/80 dark:bg-slate-900/60 px-3 text-xs uppercase tracking-wider text-slate-500">or</span>
+                </div>
+              </div>
+
+              <!-- Google Sign-up -->
+              <button type="button" id="google-btn"
+                class="inline-flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300/80 dark:border-slate-700 bg-white/90 dark:bg-slate-800/70 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-slate-100 hover:bg-slate-50/80 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40">
+                <!-- Google logo -->
+                <svg class="h-5 w-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M533.5 278.4c0-18.6-1.7-36.4-4.9-53.6H272v101.4h146.9c-6.3 34-25.2 62.8-53.8 82V483h86.9c50.8-46.8 81.5-116 81.5-204.6z" fill="#4285F4"/>
+                  <path d="M272 544.3c72.9 0 134-24.1 178.6-65.3l-86.9-74.8c-24.1 16.2-55 25.8-91.7 25.8-70.5 0-130.3-47.6-151.7-111.4H30.7v70.1C75 489.6 167.9 544.3 272 544.3z" fill="#34A853"/>
+                  <path d="M120.3 318.6c-10.1-30-10.1-62.5 0-92.5V156H30.7c-42.3 84.7-42.3 184.9 0 269.6l89.6-106.9z" fill="#FBBC05"/>
+                  <path d="M272 107.7c39.6-.6 77.4 13.8 106.7 40.7l79.5-79.5C404.2 25 345 0 272 0 167.9 0 75 54.7 30.7 156l89.6 70.1C141.7 155.3 201.5 107.7 272 107.7z" fill="#EA4335"/>
+                </svg>
+                Sign up with Google
+              </button>
+              <p class="text-center text-[11px] text-slate-500">(Uses your Google/Gmail account)</p>
+
+              <!-- Inline feedback messages -->
+              <p id="form-error" class="hidden text-center text-sm text-rose-600"></p>
+              <p id="form-success" class="hidden text-center text-sm text-emerald-600"></p>
+
+              <!-- Back to login -->
+              <p class="text-center text-sm text-slate-700 dark:text-slate-300">
+                Already have an account?
+                <a id="login-link" href="./login.html" class="font-semibold text-brand-600 hover:text-brand-700">Sign in</a>
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <!-- =========================
+             FOOTER NOTE
+        ========================== -->
+        <p class="mt-6 text-center text-xs text-slate-500">
+          By creating an account, you agree to our <a href="#" class="underline hover:text-slate-700">Terms</a> and
+          <a href="#" class="underline hover:text-slate-700">Privacy Policy</a>.
+        </p>
+      </div>
+    </main>
+
+    <!-- =========================
+         APP SCRIPT (MODULE)
+         - Put your Firebase config in signup.js
+    ========================== -->
+    <script type="module" src="./signup.js"></script>
+  </body>
+</html>
